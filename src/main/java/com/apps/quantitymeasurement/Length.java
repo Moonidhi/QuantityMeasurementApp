@@ -2,16 +2,14 @@ package com.apps.quantitymeasurement;
 
 public class Length {
 
-    private double value;
-    private LengthUnit unit;
+    private final double value;
+    private final LengthUnit unit;
 
-    // Enum for units
     public enum LengthUnit {
         FEET(12.0),
         INCHES(1.0),
         YARDS(36.0),
         CENTIMETERS(0.393701);
-    
 
         private final double conversionFactor;
 
@@ -24,37 +22,48 @@ public class Length {
         }
     }
 
-    // Constructor
     public Length(double value, LengthUnit unit) {
         if (unit == null) {
             throw new IllegalArgumentException("Unit cannot be null");
+        }
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("Invalid value");
         }
         this.value = value;
         this.unit = unit;
     }
 
-    // Convert to base unit (inches)
     private double toInches() {
-        return this.value * unit.getConversionFactor();
+        return this.value * this.unit.getConversionFactor();
     }
 
-    // Compare method
-    public boolean compare(Length other) {
-        return Double.compare(this.toInches(), other.toInches()) == 0;
+    public Length convertTo(LengthUnit targetUnit) {
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+
+        double inches = this.toInches();
+        double converted = inches / targetUnit.getConversionFactor();
+
+        return new Length(converted, targetUnit);
     }
 
-    // equals override
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
         Length other = (Length) obj;
-        return this.compare(other);
+        return Double.compare(this.toInches(), other.toInches()) == 0;
     }
 
     @Override
     public int hashCode() {
         return Double.hashCode(toInches());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%.2f %s", value, unit);
     }
 }
