@@ -2,28 +2,15 @@ package com.apps.quantitymeasurement;
 
 public class QuantityMeasurementApp {
 
-    public static class Feet {
-        private final double value;
+    public static void demonstrateLengthEquality(Length l1, Length l2) {
+        System.out.println("Are equal? " + l1.equals(l2));
+    }
 
-        public Feet(double value) {
-            this.value = value;
-        }
+    public static void main(String[] args) {
 
-        @Override
-        public boolean equals(Object obj) {
+        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length length2 = new Length(12.0, Length.LengthUnit.INCHES);
 
-            if (this == obj) return true;
-
-            if (obj == null || getClass() != obj.getClass()) return false;
-
-            Feet other = (Feet) obj;
-
-            return Double.compare(this.value, other.value) == 0;
-        }
-
-        @Override
-        public int hashCode() {
-            return Double.hashCode(value);
-        }
+        demonstrateLengthEquality(length1, length2);
     }
 }
